@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "gray-matter": "^4.0.3",
+    "grey-matter": "^0.0.0",
     "mongodb": "^5.1.0",
     "mongodb-core": "^3.2.7",
     "mongoose": "^7.0.2",
