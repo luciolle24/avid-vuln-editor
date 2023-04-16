@@ -1,10 +1,11 @@
-import { VulnList } from "@/data/vulns/vuln_list";
-import { CardItem, Li } from "@/components/cards/cards";
+import { CardItem } from "@/components/cards/cards";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Editor from "@/components/editor/editor";
+import { VulnList } from "@/data/vulns/vuln_list";
 export default function Home({ data }) {
-  const { pathname } = useRouter();
+  const router = useRouter();
+  let id = router.query.id;
   return (
     <>
       <Head>
@@ -19,7 +20,7 @@ export default function Home({ data }) {
         </CardItem>
       </div>
       <div style={{ margin: "2% 20%" }}>
-        <Editor data={data} id={pathname} />
+        <Editor data={data} id={id} />
       </div>
     </>
   );

@@ -6,7 +6,7 @@ export default function Home({ data }) {
   return (
     <>
       <Head>
-        <title>Eitor</title>
+        <title>Editor</title>
         <meta name="description" content="" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="../public/favicon.ico" />
