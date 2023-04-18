@@ -1,7 +1,6 @@
 import { CardItem, Li } from "@/components/cards/cards";
 import Head from "next/head";
-import ItemList from "@/components/carousel/ItemList";
-export default function Home({ data }) {
+export default function Home() {
   return (
     <>
       <Head>
@@ -15,11 +14,6 @@ export default function Home({ data }) {
           <h1>Welcome to our FAQ</h1>
         </CardItem>
       </div>
-      <ItemList items={data} />
     </>
   );
-}
-
-export function getStaticProps() {
-  return { props: { data: FAQ } };
 }
