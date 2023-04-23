@@ -11,72 +11,70 @@ function Editor(props) {
       ></RoundedImages>
       <h1>TITLE : </h1>
       <h2>{actualData.description.value}</h2>
-      <p>
+      <div>
         Data Type :{actualData.data_type}
         <br />
         Data Version :{actualData.data_version} <br />
         Metadata :{actualData.metadata} <br />
-      </p>
-      <p>
-        <h2>DEV:</h2>
+      </div>
+
+      <h2>DEV:</h2>
+      <div>
         {actualData.affects.developer &&
           actualData.affects.developer.map((devname) => (
-            <Li key={devname}>{devname}</Li>
+            <div>
+              <Li key={devname}>{devname}</Li>
+            </div>
           ))}
-        <h2>DEPLOYER:</h2>
+      </div>
+
+      <h2>DEPLOYER:</h2>
+      <div>
         {actualData.affects.deployer &&
           actualData.affects.deployer.map((devname) => (
-            <Li key={devname}>{devname}</Li>
+            <div>
+              <Li key={devname}>{devname}</Li>
+            </div>
           ))}
+      </div>
+      {actualData.artifacts &&
+        actualData.artifacts.map((artifacts) => (
+          <>
+            <h2>Type :</h2>
+            <br />
+            <Li key={artifacts.type}>{artifacts.type}</Li>
+            <br />
+            <h2>Name :</h2>
+            <br />
+            <Li key={artifacts.name}>{artifacts.name}</Li>
+            <br />
+          </>
+        ))}
 
-        {actualData.artifacts &&
-          actualData.artifacts.map((artifacts) => (
-            <>
-              <h2>Type :</h2>
-              <br />
-              <Li key={artifacts.type}>{artifacts.type}</Li>
-              <br />
-              <h2>Name :</h2>
-              <br />
-              <Li key={artifacts.name}>{artifacts.name}</Li>
-              <br />
-            </>
-          ))}
-        <br />
-        <h1>Problem Type</h1>
-        <br />
-        <h2>Class Of :</h2>
-        <br />
-        {actualData.problemtype.classof}
-        <br />
-        <h2>Type :</h2>
-        <br />
-        {actualData.problemtype.type}
-        <br />
-        <h2>Description in {actualData.problemtype.description.lang} :</h2>
-        {actualData.problemtype.description.value}
-        <br />
+      <h1>Problem Type</h1>
+      <h2>Class Of :</h2>
+      <div>{actualData.problemtype.classof}</div>
+      <h2>Type :</h2>
+      <div>{actualData.problemtype.type}</div>
+      <h2>Description in {actualData.problemtype.description.lang} :</h2>
+      <div>{actualData.problemtype.description.value}</div>
+      <div>
         <h1>Metrics</h1>
-        <br />
         <h2>Name :</h2>
-        <br />
-        {actualData.metrics[0].name}
-        <br />
         <h2>Detection Method :</h2>
-        <br />
         {actualData.metrics[0].detection_method.type}
-        <br />
         {actualData.metrics[0].detection_method.name}
-        <br />
         <h2>Results :</h2>
-        <br />
+      </div>
+      <div>
         {actualData.metrics[0].results.harm_category.map((harm) => (
           <>
             <Li key={harm}>{harm}</Li> <br />
           </>
         ))}
+      </div>
+      <div>
         <h2>Stat :</h2>
-        <br />
         {actualData.metrics[0].results.stat.map((stat) => (
           <>
             <Li key={stat}>{stat}</Li>
@@ -136,7 +134,7 @@ function Editor(props) {
         <br />
         {actualData.reported_date}
         <br />
-      </p>
+      </div>
     </CardItem>
   );
 }

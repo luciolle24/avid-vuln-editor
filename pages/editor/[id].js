@@ -5,7 +5,7 @@ import Editor from "@/components/editor/editor";
 import { VulnList } from "@/data/vulns/vuln_list";
 export default function Home({ data }) {
   const router = useRouter();
-  let id = router.query.id;
+  let id = router && router.query.id;
   return (
     <>
       <Head>
