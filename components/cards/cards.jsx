@@ -56,3 +56,27 @@ export const Li = styled.li`
   text-decoration: none;
   float: left;
 `;
+
+export const Input = styled.input`
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  float: left;
+  background-color: ${theme.colors.darkGrey};
+  width: 80%;
+  height: 20px;
+`;
+
+export const Label = styled.label`
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  float: left;
+  background-color: ${theme.colors.darkGrey};
+  width: 80%;
+  height: 20px;
+`;
