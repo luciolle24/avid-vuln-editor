@@ -2,6 +2,9 @@ import { CardItem, Li, RoundedImages } from "../cards/cards.jsx";
 
 function Editor(props) {
   const { data, id } = props;
+  if (data === undefined) {
+    return <div>loading</div>;
+  }
   let actualData = data[Number(id) - 1];
   return (
     <CardItem>
