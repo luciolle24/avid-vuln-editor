@@ -24,7 +24,7 @@ function VulnaList(props) {
               key={event.id}
               id={event.id}
               name={event.description.value}
-              icon="https://www.vuln.co.il/wp-content/uploads/2020/09/Group-1.png"
+              icon="https://avidml.org/uploads/avid-logo.png"
             />
           ))}
       </Carousel>

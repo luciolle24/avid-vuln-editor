@@ -19,6 +19,7 @@ function Editor(props) {
           name="Title"
           id="Title"
           value={actualData.description.value}
+          contenteditable="true"
         />
         <CardItem>
           <Label for="Data Type">Data Type :</Label>
@@ -26,7 +27,7 @@ function Editor(props) {
             type="text"
             name="Data Type"
             id="Data Type"
-            value={actualData.data_type}
+            placeholder={actualData.data_type}
           />
           <br />
           <Label for="Data Version">Data Version :</Label>
@@ -34,7 +35,7 @@ function Editor(props) {
             type="text"
             name="Data Version"
             id="Data Version"
-            value={actualData.data_version}
+            placeholder={actualData.data_version}
           />
           <br />
           <Label for=":etaData">Metadata :</Label>
@@ -42,126 +43,218 @@ function Editor(props) {
             type="text"
             name="MetaData"
             id="MetaData"
-            value={actualData.metadata}
+            placeholder={actualData.metadata}
+            contentEditable
           />
           <br />
         </CardItem>
 
-        <h2>DEV:</h2>
+        <Label>DEV:</Label>
         <CardItem>
           {actualData.affects.developer &&
-            actualData.affects.developer.map((devname) => (
+            actualData.affects.developer.map((devname, index) => (
               <CardItem>
-                <Li key={devname}>{devname}</Li>
+                <Input
+                  type="text"
+                  name={devname}
+                  id="Dev"
+                  placeholder={devname}
+                />
               </CardItem>
             ))}
         </CardItem>
 
-        <h2>DEPLOYER:</h2>
+        <Label>DEPLOYER:</Label>
         <CardItem>
           {actualData.affects.deployer &&
             actualData.affects.deployer.map((devname) => (
               <>
-                <Li key={devname}>{devname}</Li>
+                <Input
+                  type="text"
+                  name={devname}
+                  id="Deployer"
+                  placeholder={devname}
+                />
               </>
             ))}
         </CardItem>
         {actualData.artifacts &&
           actualData.artifacts.map((artifacts) => (
             <>
-              <h2>Type :</h2>
+              <Label>Type :</Label>
               <br />
-              <Li key={artifacts.type}>{artifacts.type}</Li>
+              <Input
+                type="text"
+                name={artifacts.type}
+                id={artifacts.type}
+                placeholder={artifacts.type}
+              />
               <br />
-              <h2>Name :</h2>
+              <Label>Name :</Label>
               <br />
-              <Li key={artifacts.name}>{artifacts.name}</Li>
+              <Input
+                type="text"
+                name={artifacts.name}
+                id={artifacts.name}
+                placeholder={artifacts.name}
+              />
               <br />
             </>
           ))}
 
-        <h1>Problem Type</h1>
-        <h2>Class Of :</h2>
-        <CardItem>{actualData.problemtype.classof}</CardItem>
-        <h2>Type :</h2>
-        <CardItem>{actualData.problemtype.type}</CardItem>
-        <h2>Description in {actualData.problemtype.description.lang} :</h2>
-        <h2>{actualData.problemtype.description.value}</h2>
+        <Label>Problem Type</Label>
+        <Label>Class Of :</Label>
         <CardItem>
-          <h1>Metrics</h1>
-          <h2>Name :</h2>
-          <h2>Detection Method :</h2>
-          {actualData.metrics[0].detection_method.type}
-          {actualData.metrics[0].detection_method.name}
-          <h2>Results :</h2>
+          <Input
+            type="text"
+            name={actualData.problemtype.classof}
+            id="ClassOf"
+            placeholder={actualData.problemtype.classof}
+          />
+        </CardItem>
+        <Label>Type :</Label>
+        <CardItem>
+          <Input
+            type="text"
+            name={actualData.problemtype.type}
+            idd="Type"
+            placeholder={actualData.problemtype.type}
+          />
+        </CardItem>
+        <Label>
+          Description in
+          <Input
+            type="text"
+            name={actualData.problemtype.description.lang}
+            id="lang"
+            placeholder={actualData.problemtype.description.lang}
+          />
+          :
+        </Label>
+        <Label>
+          <Input
+            type="text"
+            name={actualData.problemtype.description.value}
+            id="value"
+            placeholder={actualData.problemtype.description.value}
+          />
+        </Label>
+        <CardItem>
+          <Label>Metrics</Label>
+          <Label>Name :</Label>
+          <Label>Detection Method :</Label>
+          <Input
+            type="text"
+            name={actualData.metrics[0].detection_method.type}
+            id="metric.detection_method.type"
+            placeholder={actualData.metrics[0].detection_method.type}
+          />
+          <Input
+            type="text"
+            name={actualData.metrics[0].detection_method.name}
+            id="metric.detection_method.name"
+            placeholder={actualData.metrics[0].detection_method.name}
+          />
+
+          <Label>Results :</Label>
         </CardItem>
         <CardItem>
           {actualData.metrics[0].results.harm_category.map((harm) => (
             <>
-              <Li key={harm}>{harm}</Li> <br />
+              <Input type="text" name={harm} id={harm} placeholder={harm} />
             </>
           ))}
         </CardItem>
         <CardItem>
-          <h2>Stat :</h2>
+          <Label>Stat :</Label>
           {actualData.metrics[0].results.stat.map((stat) => (
             <>
-              <Li key={stat}>{stat}</Li>
+              <Input type="text" name={stat} id={stat} placeholder={stat} />
               <br />
             </>
           ))}
-          <h2>Pvalue :</h2>
+          <Label>PValue :</Label>
           {actualData.metrics[0].results.pvalue.map((pvalue) => (
             <>
-              <Li key={pvalue}>{pvalue}</Li>
+              <Input
+                type="text"
+                name={pvalue}
+                id={pvalue}
+                placeholder={pvalue}
+              />
               <br />
             </>
           ))}
-          <h2>References :</h2>
+          <Label>References :</Label>
           {actualData.references.map((reference) => (
             <>
-              <Li key={reference.Label}>
-                {reference.Label} : {reference.url}
-                <br />
-              </Li>
+              <Input
+                type="text"
+                name={reference}
+                id={reference}
+                placeholder={reference}
+              />
+              <br />
             </>
           ))}
-          <h2>Impact</h2>
+          <Label>Impact</Label>
           <br />
-          <h2>Risk Domain :</h2>
+          <Label>Risk Domain :</Label>
           <br />
           {actualData.impact.avid.risk_domain.map((risk) => (
             <>
-              <Li key={risk}>{risk}</Li>
+              <Input type="text" name={risk} id={risk} placeholder={risk} />
               <br />
             </>
           ))}
-          <h2>SEP View :</h2>
+          <Label>SEP View :</Label>
           <br />
           {actualData.impact.avid.sep_view.map((sep) => (
             <>
-              <Li key={sep}>{sep}</Li> <br />
+              <Input type="text" name={sep} id={sep} placeholder={sep} />
             </>
           ))}
-          <h2>Lifecycle View :</h2>
+          <Label>Lifecycle View :</Label>
           <br />
           {actualData.impact.avid.lifecycle_view.map((lifecycle) => (
             <>
-              <Li key={lifecycle}>{lifecycle}</Li>
+              <Input
+                type="text"
+                name={lifecycle}
+                id={lifecycle}
+                placeholder={lifecycle}
+              />
               <br />
             </>
           ))}
-          <h2>Taxonomy Version :</h2>
+          <Label>Taxonomy Version :</Label>
           <br />
-          {actualData.impact.avid.taxonomy_version}
+          <Input
+            type="text"
+            name={actualData.impact.avid.taxonomy_version}
+            id="impact.avid.taxonomy_version"
+            placeholder={actualData.impact.avid.taxonomy_version}
+          />
+
           <br />
-          <h2>Credit :</h2>
+          <Label>Credit :</Label>
           <br />
-          {actualData.credit}
+          <Input
+            type="text"
+            name={actualData.credit}
+            id="credit"
+            placeholder={actualData.credit}
+          />
+
           <br />
-          <h2>Reported Date :</h2>
+          <Label>Reported Date :</Label>
           <br />
-          {actualData.reported_date}
+          <Input
+            type="text"
+            name={actualData.reported_date}
+            id="reported_date"
+            placeholder={actualData.reported_date}
+          />
           <br />
         </CardItem>
       </CardItem>
