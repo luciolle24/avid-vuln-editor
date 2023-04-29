@@ -1,4 +1,10 @@
-import { CardItem, Textarea, Label, RoundedImages } from "../cards/cards.jsx";
+import {
+  CardItem,
+  Textarea,
+  Label,
+  RoundedImages,
+  Button,
+} from "../cards/cards.jsx";
 
 function Editor(props) {
   const { data, id } = props;
@@ -230,8 +236,7 @@ function Editor(props) {
             >
               {actualData.reported_date}
             </Textarea>
-            <br />
-            <button type="submit">Submit</button>
+            <Button>Submit</Button>
           </CardItem>
         </form>
       </CardItem>
