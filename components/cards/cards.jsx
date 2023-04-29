@@ -57,7 +57,7 @@ export const Li = styled.li`
   float: left;
 `;
 
-export const Input = styled.input`
+export const Textarea = styled.textarea`
   display: block;
   color: white;
   text-align: center;
@@ -65,7 +65,10 @@ export const Input = styled.input`
   text-decoration: none;
   float: left;
   background-color: ${theme.colors.darkGrey};
-  width: 80%;
+  width: 100%;
+  min-width: 300px;
+  height: 100%;
+  min-height: 80px;
   height: 20px;
 `;
 
