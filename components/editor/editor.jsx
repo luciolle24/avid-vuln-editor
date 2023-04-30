@@ -11,6 +11,7 @@ function Editor(props) {
   if (data === undefined) {
     return <CardItem>loading</CardItem>;
   }
+
   let actualData = data[Number(id) - 1];
   return (
     <>
@@ -19,7 +20,7 @@ function Editor(props) {
           src="https://avidml.org/uploads/avid-logo.png"
           alt="AVID Logo"
         ></RoundedImages>
-        <form action="/api/json_parser" method="post">
+        <form action="/api/req_to_json.js" method="post">
           <CardItem>
             <Label for="Title">Title :</Label>
             <Textarea name="Title" id="Title">
@@ -47,7 +48,7 @@ function Editor(props) {
             {actualData.affects.developer &&
               actualData.affects.developer.map((devname) => (
                 <CardItem>
-                  <Textarea type="text" name={devname} id="Dev">
+                  <Textarea type="text" name="Dev" id="Dev">
                     {devname}
                   </Textarea>
                 </CardItem>
@@ -58,8 +59,7 @@ function Editor(props) {
             {actualData.affects.deployer &&
               actualData.affects.deployer.map((devname) => (
                 <>
-                  <Label for="Deployer">{devname}</Label>
-                  <Textarea type="text" name={devname} id="Deployer">
+                  <Textarea type="text" name="Deployer" id="Deployer">
                     {devname}
                   </Textarea>
                 </>
@@ -71,14 +71,14 @@ function Editor(props) {
                 <Label>Type :</Label>
                 <br />
                 <Label for={artifacts.type}>{artifacts.type}</Label>
-                <Textarea type="text" name={artifacts.type} id={artifacts.type}>
+                <Textarea type="text" name="Art Types" id={artifacts.type}>
                   {artifacts.type}
                 </Textarea>
                 <br />
                 <Label>Name :</Label>
                 <br />
                 <Label for={artifacts.name}>{artifacts.name}</Label>
-                <Textarea type="text" name={artifacts.name} id={artifacts.name}>
+                <Textarea type="text" name="Art Names" id={artifacts.name}>
                   {artifacts.name}
                 </Textarea>
                 <br />
@@ -87,28 +87,19 @@ function Editor(props) {
           <CardItem>
             <Label>Problem Type</Label>
             <Label>Class Of :</Label>
-            <Textarea
-              type="text"
-              name={actualData.problemtype.classof}
-              id="ClassOf"
-            >
+            <Textarea type="text" name="ClassOf" id="ClassOf">
               {actualData.problemtype.classof}
             </Textarea>
           </CardItem>
           <CardItem>
             <Label>Type :</Label>
-            <Textarea type="text" name={actualData.problemtype.type} idd="Type">
+            <Textarea type="text" name="Type" idd="Type">
               {actualData.problemtype.type}
             </Textarea>
           </CardItem>
           <CardItem>
             <Label>Description in</Label>
-            {actualData.problemtype.description.lang}
-            <Textarea
-              type="text"
-              name={actualData.problemtype.description.lang}
-              id="lang"
-            >
+            <Textarea type="text" name="lang" id="lang">
               {actualData.problemtype.description.lang}
             </Textarea>
             :
