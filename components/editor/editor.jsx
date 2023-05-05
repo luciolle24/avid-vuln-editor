@@ -1,237 +1,342 @@
+import { useState } from "react";
 import {
-  CardItem,
-  Textarea,
-  Label,
-  RoundedImages,
-  Button,
+    CardItem,
+    Textarea,
+    Label,
+    RoundedImages,
+    Button,
 } from "../cards/cards.jsx";
 
+async function submitForm(data) {
+    const f = new FormData();
+    for (const [key, value] of Object.entries(data)) {
+        f.append(key, value);
+    }
+
+    const res = await fetch("/api/convert-form-to-json", {
+        method: "POST",
+        body: f,
+    });
+
+    const resBody = await res.json();
+
+    if (res.status == 200) {
+        notification.success({
+            duration: 3,
+            message: "Submission Status",
+            description: resBody.status,
+            onClose: () => router.reload(window.location.pathname),
+        });
+    } else {
+        notification.error({
+            duration: 2,
+            message: "Submission Status",
+            description: resBody.status,
+        });
+    }
+}
+
 function Editor(props) {
-  const { data, id } = props;
-  if (data === undefined) {
-    return <CardItem>loading</CardItem>;
-  }
+    const { data, id } = props;
 
-  let actualData = data[Number(id) - 1];
-  return (
-    <>
-      <CardItem>
-        <RoundedImages
-          src="https://avidml.org/uploads/avid-logo.png"
-          alt="AVID Logo"
-        ></RoundedImages>
-        <form action="/api/req_to_json.js" method="post">
-          <CardItem>
-            <Label for="Title">Title :</Label>
-            <Textarea name="Title" id="Title">
-              {actualData.description.value + "\n"}
-            </Textarea>
+    if (data === undefined) {
+        return <CardItem>loading</CardItem>;
+    }
 
-            <Label for="Data Type">Data Type :</Label>
-            <Textarea type="text" name="Data Type" id="Data Type">
-              {actualData.data_type}
-            </Textarea>
-            <br />
-            <Label for="Data Version">Data Version :</Label>
-            <Textarea type="text" name="Data Version" id="Data Version">
-              {actualData.data_version}
-            </Textarea>
-            <br />
-            <Label for="MetaData">Metadata :</Label>
-            <Textarea type="text" name="MetaData" id="MetaData">
-              {actualData.metadata}
-            </Textarea>
-            <br />
-          </CardItem>
-          <CardItem>
-            <Label>DEV:</Label>
-            {actualData.affects.developer &&
-              actualData.affects.developer.map((devname) => (
-                <CardItem>
-                  <Textarea type="text" name="Dev" id="Dev">
-                    {devname}
-                  </Textarea>
-                </CardItem>
-              ))}
-          </CardItem>
-          <CardItem>
-            <Label>DEPLOYER:</Label>
-            {actualData.affects.deployer &&
-              actualData.affects.deployer.map((devname) => (
-                <>
-                  <Textarea type="text" name="Deployer" id="Deployer">
-                    {devname}
-                  </Textarea>
-                </>
-              ))}
-          </CardItem>
-          {actualData.artifacts &&
-            actualData.artifacts.map((artifacts) => (
-              <>
-                <Label>Type :</Label>
-                <br />
-                <Label for={artifacts.type}>{artifacts.type}</Label>
-                <Textarea type="text" name="Art Types" id={artifacts.type}>
-                  {artifacts.type}
-                </Textarea>
-                <br />
-                <Label>Name :</Label>
-                <br />
-                <Label for={artifacts.name}>{artifacts.name}</Label>
-                <Textarea type="text" name="Art Names" id={artifacts.name}>
-                  {artifacts.name}
-                </Textarea>
-                <br />
-              </>
-            ))}
-          <CardItem>
-            <Label>Problem Type</Label>
-            <Label>Class Of :</Label>
-            <Textarea type="text" name="ClassOf" id="ClassOf">
-              {actualData.problemtype.classof}
-            </Textarea>
-          </CardItem>
-          <CardItem>
-            <Label>Type :</Label>
-            <Textarea type="text" name="Type" idd="Type">
-              {actualData.problemtype.type}
-            </Textarea>
-          </CardItem>
-          <CardItem>
-            <Label>Description in</Label>
-            <Textarea type="text" name="lang" id="lang">
-              {actualData.problemtype.description.lang}
-            </Textarea>
-            :
-            <Label>
-              <Textarea
-                type="text"
-                name={actualData.problemtype.description.value}
-                id="value"
-              >
-                {actualData.problemtype.description.value}
-              </Textarea>
-            </Label>
-          </CardItem>
-          <CardItem>
-            <Label>Metrics</Label>
-            <Label>Name :</Label>
-            <Label>Detection Method :</Label>
-            <Textarea
-              type="text"
-              name={actualData.metrics[0].detection_method.type}
-              id="metric.detection_method.type"
-            >
-              {actualData.metrics[0].detection_method.type}
-            </Textarea>
-            <Textarea
-              type="text"
-              name={actualData.metrics[0].detection_method.name}
-              id="metric.detection_method.name"
-            >
-              {actualData.metrics[0].detection_method.name}
-            </Textarea>
-          </CardItem>
-          <CardItem>
-            <Label>Results :</Label>
-            {actualData.metrics[0].results.harm_category.map((harm) => (
-              <>
-                <Textarea type="text" name={harm} id={harm}>
-                  {harm}
-                </Textarea>
-              </>
-            ))}
-          </CardItem>
-          <CardItem>
-            <Label>Stat :</Label>
-            {actualData.metrics[0].results.stat.map((stat) => (
-              <>
-                <Textarea type="text" name={stat} id={stat}>
-                  {stat}
-                </Textarea>
-              </>
-            ))}
-            <Label>PValue :</Label>
-            {actualData.metrics[0].results.pvalue.map((pvalue) => (
-              <>
-                <Textarea type="text" name={pvalue} id={pvalue}>
-                  {pvalue}
-                </Textarea>
-                <br />
-              </>
-            ))}
-            <Label>References :</Label>
-            {actualData.references.map((reference) => (
-              <>
-                <Textarea type="text" name={reference} id={reference}>
-                  {reference}
-                </Textarea>
-                <br />
-              </>
-            ))}
-            <Label>Impact</Label>
-            <br />
-            <Label>Risk Domain :</Label>
-            <br />
-            {actualData.impact.avid.risk_domain.map((risk) => (
-              <>
-                <Textarea type="text" name={risk} id={risk}>
-                  {risk}
-                </Textarea>
-                <br />
-              </>
-            ))}
-            <Label>SEP View :</Label>
-            <br />
-            {actualData.impact.avid.sep_view.map((sep) => (
-              <>
-                <Textarea type="text" name={sep} id={sep}>
-                  {sep}
-                </Textarea>
-              </>
-            ))}
-            <Label>Lifecycle View :</Label>
-            <br />
-            {actualData.impact.avid.lifecycle_view.map((lifecycle) => (
-              <>
-                <Textarea type="text" name={lifecycle} id={lifecycle}>
-                  {lifecycle}
-                </Textarea>
-                <br />
-              </>
-            ))}
-            <Label>Taxonomy Version :</Label>
-            <br />
-            <Textarea
-              type="text"
-              name={actualData.impact.avid.taxonomy_version}
-              id="impact"
-            >
-              {actualData.impact.avid.taxonomy_version}
-            </Textarea>
+    let actualData = data[Number(id) - 1];
+    return (
+        <>
+            <CardItem>
+                <RoundedImages
+                    src="https://avidml.org/uploads/avid-logo.png"
+                    alt="AVID Logo"
+                ></RoundedImages>
+                <form onSubmit={submitForm}>
+                    <CardItem>
+                        <Label for="Title">Title :</Label>
+                        <Textarea
+                            name="Title"
+                            id="Title"
+                            defaultValue={actualData.description.value}
+                        />
 
-            <br />
-            <Label>Credit :</Label>
-            <br />
-            <Textarea type="text" name={actualData.credit} id="credit">
-              {actualData.credit}
-            </Textarea>
+                        <Label for="Data Type">Data Type :</Label>
+                        <Textarea
+                            type="text"
+                            name="Data Type"
+                            id="Data Type"
+                            defaultValue={actualData.data_type}
+                        />
+                        <br />
+                        <Label for="Data Version">Data Version :</Label>
+                        <Textarea
+                            type="text"
+                            name="Data Version"
+                            id="Data Version"
+                            defaultValue={actualData.data_version}
+                        />
+                        <br />
+                        <Label for="MetaData">Metadata :</Label>
+                        <Textarea
+                            type="text"
+                            name="MetaData"
+                            id="MetaData"
+                            defaultValue={actualData.metadata}
+                        />
+                        <br />
+                    </CardItem>
+                    <CardItem>
+                        <Label>DEV:</Label>
+                        {actualData.affects.developer &&
+                            actualData.affects.developer.map((devname) => (
+                                <CardItem>
+                                    <Textarea
+                                        type="text"
+                                        name="Dev"
+                                        id="Dev"
+                                        defaultValue={devname}
+                                    />
+                                </CardItem>
+                            ))}
+                    </CardItem>
+                    <CardItem>
+                        <Label>DEPLOYER:</Label>
+                        {actualData.affects.deployer &&
+                            actualData.affects.deployer.map((devname) => (
+                                <>
+                                    <Textarea
+                                        type="text"
+                                        name="Deployer"
+                                        id="Deployer"
+                                        defaultValue={devname}
+                                    />
+                                </>
+                            ))}
+                    </CardItem>
+                    {actualData.artifacts &&
+                        actualData.artifacts.map((artifacts) => (
+                            <>
+                                <Label>Type :</Label>
+                                <br />
+                                <Label for={artifacts.type}>
+                                    {artifacts.type}
+                                </Label>
+                                <Textarea
+                                    type="text"
+                                    name="Art Types"
+                                    id={artifacts.type}
+                                    defaultValue={artifacts.type}
+                                />
+                                <br />
+                                <Label>Name :</Label>
+                                <br />
+                                <Label for={artifacts.name}>
+                                    {artifacts.name}
+                                </Label>
+                                <Textarea
+                                    type="text"
+                                    name="Art Names"
+                                    id={artifacts.name}
+                                    defaultValue={artifacts.name}
+                                />
+                                <br />
+                            </>
+                        ))}
+                    <CardItem>
+                        <Label>Problem Type</Label>
+                        <Label>Class Of :</Label>
+                        <Textarea
+                            type="text"
+                            name="ClassOf"
+                            id="ClassOf"
+                            defaultValue={actualData.problemtype.classof}
+                        />
+                    </CardItem>
+                    <CardItem>
+                        <Label>Type :</Label>
+                        <Textarea
+                            type="text"
+                            name="Type"
+                            idd="Type"
+                            defaultValue={actualData.problemtype.type}
+                        />
+                    </CardItem>
+                    <CardItem>
+                        <Label>Description in</Label>
+                        <Textarea
+                            type="text"
+                            name="lang"
+                            id="lang"
+                            defaultValue={
+                                actualData.problemtype.description.lang
+                            }
+                        />
+                        :
+                        <Label>
+                            <Textarea
+                                type="text"
+                                name={actualData.problemtype.description.value}
+                                id="value"
+                                defaultValue={
+                                    actualData.problemtype.description.value
+                                }
+                            />
+                        </Label>
+                    </CardItem>
+                    <CardItem>
+                        <Label>Metrics</Label>
+                        <Label>Name :</Label>
+                        <Label>Detection Method :</Label>
+                        <Textarea
+                            type="text"
+                            name={actualData.metrics[0].detection_method.type}
+                            id="metric.detection_method.type"
+                            defaultValue={
+                                actualData.metrics[0].detection_method.type
+                            }
+                        />
+                        <Textarea
+                            type="text"
+                            name={actualData.metrics[0].detection_method.name}
+                            id="metric.detection_method.name"
+                            defaultValue={
+                                actualData.metrics[0].detection_method.name
+                            }
+                        />
+                    </CardItem>
+                    <CardItem>
+                        <Label>Results :</Label>
+                        {actualData.metrics[0].results.harm_category.map(
+                            (harm) => (
+                                <>
+                                    <Textarea
+                                        type="text"
+                                        name={harm}
+                                        id={harm}
+                                        defaultValue={harm}
+                                    />
+                                </>
+                            )
+                        )}
+                    </CardItem>
+                    <CardItem>
+                        <Label>Stat :</Label>
+                        {actualData.metrics[0].results.stat.map((stat) => (
+                            <>
+                                <Textarea
+                                    type="text"
+                                    name={stat}
+                                    id={stat}
+                                    defaultValue={stat}
+                                />
+                            </>
+                        ))}
+                        <Label>PValue :</Label>
+                        {actualData.metrics[0].results.pvalue.map((pvalue) => (
+                            <>
+                                <Textarea
+                                    type="text"
+                                    name={pvalue}
+                                    id={pvalue}
+                                    defaultValue={pvalue}
+                                />
 
-            <br />
-            <Label>Reported Date :</Label>
-            <br />
-            <Textarea
-              type="text"
-              name={actualData.reported_date}
-              id="reported_date"
-            >
-              {actualData.reported_date}
-            </Textarea>
-            <Button>Submit</Button>
-          </CardItem>
-        </form>
-      </CardItem>
-    </>
-  );
+                                <br />
+                            </>
+                        ))}
+                        <Label>References :</Label>
+                        {actualData.references.map((reference) => (
+                            <>
+                                <Textarea
+                                    type="text"
+                                    name={reference}
+                                    id={reference}
+                                    defaultValue={reference}
+                                />
+
+                                <br />
+                            </>
+                        ))}
+                        <Label>Impact</Label>
+                        <br />
+                        <Label>Risk Domain :</Label>
+                        <br />
+                        {actualData.impact.avid.risk_domain.map((risk) => (
+                            <>
+                                <Textarea
+                                    type="text"
+                                    name={risk}
+                                    id={risk}
+                                    defaultValue={risk}
+                                />
+
+                                <br />
+                            </>
+                        ))}
+                        <Label>SEP View :</Label>
+                        <br />
+                        {actualData.impact.avid.sep_view.map((sep) => (
+                            <>
+                                <Textarea
+                                    type="text"
+                                    name={sep}
+                                    id={sep}
+                                    defaultValue={sep}
+                                />
+                            </>
+                        ))}
+                        <Label>Lifecycle View :</Label>
+                        <br />
+                        {actualData.impact.avid.lifecycle_view.map(
+                            (lifecycle) => (
+                                <>
+                                    <Textarea
+                                        type="text"
+                                        name={lifecycle}
+                                        id={lifecycle}
+                                        defaultValue={lifecycle}
+                                    />
+
+                                    <br />
+                                </>
+                            )
+                        )}
+                        <Label>Taxonomy Version :</Label>
+                        <br />
+                        <Textarea
+                            type="text"
+                            name={actualData.impact.avid.taxonomy_version}
+                            id="impact"
+                            defaultValue={
+                                actualData.impact.avid.taxonomy_version
+                            }
+                        />
+
+                        <br />
+                        <Label>Credit :</Label>
+                        <br />
+                        <Textarea
+                            type="text"
+                            name={actualData.credit}
+                            id="credit"
+                            defaultValue={actualData.credit}
+                        />
+
+                        <br />
+                        <Label>Reported Date :</Label>
+                        <br />
+                        <Textarea
+                            type="text"
+                            name={actualData.reported_date}
+                            id="reported_date"
+                            defaultdefaultValue={actualData.reported_date}
+                        />
+
+                        <Button>Submit</Button>
+                    </CardItem>
+                </form>
+            </CardItem>
+        </>
+    );
 }
 export default Editor;
