@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
     CardItem,
     Textarea,
@@ -9,9 +8,9 @@ import {
 
 async function submitForm(data) {
     const f = new FormData();
-    for (const [key, value] of Object.entries(data)) {
-        f.append(key, value);
-    }
+    f.append("title", data.title);
+    var newfile = f.get("title");
+    console.log(newfile.name); //filename
 
     const res = await fetch("/api/convert-form-to-json", {
         method: "POST",
@@ -53,22 +52,22 @@ function Editor(props) {
                 ></RoundedImages>
                 <form onSubmit={submitForm}>
                     <CardItem>
-                        <Label for="Title">Title :</Label>
+                        <Label htmlFor="Title">Title :</Label>
                         <Textarea
-                            name="Title"
-                            id="Title"
+                            type="text"
+                            name="title"
+                            id="title"
                             defaultValue={actualData.description.value}
                         />
 
-                        <Label for="Data Type">Data Type :</Label>
+                        <Label htmlFor="Data Type">Data Type :</Label>
                         <Textarea
-                            type="text"
                             name="Data Type"
                             id="Data Type"
                             defaultValue={actualData.data_type}
                         />
                         <br />
-                        <Label for="Data Version">Data Version :</Label>
+                        <Label htmlFor="Data Version">Data Version :</Label>
                         <Textarea
                             type="text"
                             name="Data Version"
@@ -76,7 +75,7 @@ function Editor(props) {
                             defaultValue={actualData.data_version}
                         />
                         <br />
-                        <Label for="MetaData">Metadata :</Label>
+                        <Label htmlFor="MetaData">Metadata :</Label>
                         <Textarea
                             type="text"
                             name="MetaData"
@@ -95,6 +94,7 @@ function Editor(props) {
                                         name="Dev"
                                         id="Dev"
                                         defaultValue={devname}
+                                        key={devname}
                                     />
                                 </CardItem>
                             ))}
@@ -109,6 +109,7 @@ function Editor(props) {
                                         name="Deployer"
                                         id="Deployer"
                                         defaultValue={devname}
+                                        key={devname}
                                     />
                                 </>
                             ))}
@@ -118,7 +119,7 @@ function Editor(props) {
                             <>
                                 <Label>Type :</Label>
                                 <br />
-                                <Label for={artifacts.type}>
+                                <Label htmlFor={artifacts.type}>
                                     {artifacts.type}
                                 </Label>
                                 <Textarea
@@ -126,11 +127,12 @@ function Editor(props) {
                                     name="Art Types"
                                     id={artifacts.type}
                                     defaultValue={artifacts.type}
+                                    key={artifacts.type}
                                 />
                                 <br />
                                 <Label>Name :</Label>
                                 <br />
-                                <Label for={artifacts.name}>
+                                <Label htmlFor={artifacts.name}>
                                     {artifacts.name}
                                 </Label>
                                 <Textarea
@@ -138,6 +140,7 @@ function Editor(props) {
                                     name="Art Names"
                                     id={artifacts.name}
                                     defaultValue={artifacts.name}
+                                    key={artifacts.name}
                                 />
                                 <br />
                             </>
@@ -214,6 +217,7 @@ function Editor(props) {
                                         name={harm}
                                         id={harm}
                                         defaultValue={harm}
+                                        key={harm}
                                     />
                                 </>
                             )
@@ -228,6 +232,7 @@ function Editor(props) {
                                     name={stat}
                                     id={stat}
                                     defaultValue={stat}
+                                    key={stat}
                                 />
                             </>
                         ))}
@@ -239,6 +244,7 @@ function Editor(props) {
                                     name={pvalue}
                                     id={pvalue}
                                     defaultValue={pvalue}
+                                    key={pvalue}
                                 />
 
                                 <br />
@@ -252,6 +258,7 @@ function Editor(props) {
                                     name={reference}
                                     id={reference}
                                     defaultValue={reference}
+                                    key={reference}
                                 />
 
                                 <br />
@@ -268,6 +275,7 @@ function Editor(props) {
                                     name={risk}
                                     id={risk}
                                     defaultValue={risk}
+                                    key={risk}
                                 />
 
                                 <br />
@@ -282,6 +290,7 @@ function Editor(props) {
                                     name={sep}
                                     id={sep}
                                     defaultValue={sep}
+                                    key={sep}
                                 />
                             </>
                         ))}
@@ -295,6 +304,7 @@ function Editor(props) {
                                         name={lifecycle}
                                         id={lifecycle}
                                         defaultValue={lifecycle}
+                                        key={lifecycle}
                                     />
 
                                     <br />
@@ -332,7 +342,9 @@ function Editor(props) {
                             defaultdefaultValue={actualData.reported_date}
                         />
 
-                        <Button>Submit</Button>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
                     </CardItem>
                 </form>
             </CardItem>

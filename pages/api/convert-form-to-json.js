@@ -1,17 +1,8 @@
 import formidable from "formidable";
-import * as yup from "yup";
 import { v4 as uuidv4 } from "uuid";
-
-let formSchema = yup.object().shape({
-    name: yup.string().required(),
-    email: yup.string().email().required(),
-    image: yup.mixed().required(),
-});
 
 async function saveFormData(fields, files) {
     const jsonData = JSON.stringify(fields, null, 2);
-    const now = new Date();
-    const timestamp = now.toISOString().replace(/[:.-]/g, "");
     const uuid = uuidv4();
     const filePath = path.join("../../vulns/", { uuid }, ".json");
     try {
@@ -22,56 +13,54 @@ async function saveFormData(fields, files) {
     }
 }
 
-async function validateFromData(fields, files) {
-    try {
-        await formSchema.validate({ ...fields, ...files });
-        return true;
-    } catch (e) {
-        return false;
-    }
-}
-
 async function handlePostFormReq(req, res) {
     const form = formidable({ multiples: true });
 
-    const formData = new Promise((resolve, reject) => {
+    // create a promise that resolves after a specified timeout
+    const timeoutPromise = new Promise((resolve) => {
+        setTimeout(() => {
+            resolve("timeout");
+        }, 5000); // set the timeout to 5 seconds
+    });
+
+    // create a promise that resolves when form.parse() finishes
+    const formPromise = new Promise((resolve, reject) => {
         form.parse(req, async (err, fields, files) => {
             if (err) {
-                reject("error");
+                console.error(err);
+                reject("form error");
+                return;
             }
-            resolve({ fields, files });
+
+            try {
+                await saveFormData(fields, files);
+                resolve("submitted");
+            } catch (e) {
+                console.error(e);
+                reject("save error");
+            }
         });
     });
 
-    try {
-        const { fields, files } = await formData;
-        const isValid = await validateFromData(fields, files);
-        if (!isValid) throw Error("invalid form schema");
+    // wait for the first promise to resolve, either the formPromise or the timeoutPromise
+    const result = await Promise.race([formPromise, timeoutPromise]);
 
-        try {
-            await saveFormData(fields, files);
-            res.status(200).send({ status: "submitted" });
-            return;
-        } catch (e) {
-            res.status(500).send({ status: "something went wrong" });
-            return;
-        }
-    } catch (e) {
-        res.status(400).send({ status: "invalid submission" });
-        return;
+    // check which promise resolved and respond accordingly
+    if (result === "submitted") {
+        res.status(200).send({ status: "submitted" });
+    } else if (result === "form error") {
+        res.status(500).send({ status: "something went wrong with the form" });
+    } else {
+        res.status(500).send({ status: "timeout" });
     }
 }
 
 export default async function handler(req, res) {
-    if (req.method == "POST") {
+    if (req.method === "POST") {
+        console.log("POST");
         await handlePostFormReq(req, res);
     } else {
+        console.log("GET");
         res.status(404).send("method not found");
     }
 }
-
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
