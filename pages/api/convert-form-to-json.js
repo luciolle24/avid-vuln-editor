@@ -3,17 +3,18 @@ import { v4 as uuidv4 } from "uuid";
 import path from "path";
 import fs from "fs";
 
-async function saveFormData(fields, files) {
+async function saveFormData(fields) {
     const jsonData = JSON.stringify(fields, null, 2);
     const uuid = uuidv4();
-
     try {
-        await fs.promises.writeFile(filePath, jsonData);
+        await fs.promises.writeFile(
+            path.join("./vulns/", `${uuid}.json`),
+            jsonData
+        );
         console.log("JSON file created successfully");
     } catch (error) {
         console.error(error);
     }
-    const filePath = path.join("./vulns/", "${uuid}.json");
 }
 
 async function handlePostFormReq(req, res) {
@@ -28,7 +29,7 @@ async function handlePostFormReq(req, res) {
 
     // create a promise that resolves when form.parse() finishes
     const formPromise = new Promise((resolve, reject) => {
-        form.parse(req, async (err, fields, files) => {
+        form.parse(req, async (err, fields) => {
             if (err) {
                 console.error(err);
                 reject("form error");
@@ -36,7 +37,7 @@ async function handlePostFormReq(req, res) {
             }
 
             try {
-                await saveFormData(fields, files);
+                await saveFormData(fields);
                 resolve("submitted");
             } catch (e) {
                 console.error(e);
@@ -68,4 +69,8 @@ export default async function handler(req, res) {
     }
 }
 
-export const config = { api: { bodyParser: false } };
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};

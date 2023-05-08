@@ -5,12 +5,16 @@ import {
     RoundedImages,
     Button,
 } from "../cards/cards.jsx";
+import { notification } from "antd";
 
 async function submitForm(data) {
+    data.preventDefault();
+    console.log(data);
     const f = new FormData();
     f.append("title", data.title);
+    console.log(data.title);
 
-    const res = await fetch("/api/convert-form-to-json", {
+    const res = await fetch("http://localhost:3000/api/convert-form-to-json", {
         method: "POST",
         body: f,
     });
@@ -22,7 +26,7 @@ async function submitForm(data) {
             duration: 3,
             message: "Submission Status",
             description: resBody.status,
-            onClose: () => router.reload(window.location.pathname),
+            //onClose: () => router.reload(window.location.pathname),
         });
     } else {
         notification.error({
