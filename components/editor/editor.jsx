@@ -11,7 +11,41 @@ async function submitForm(event) {
     event.preventDefault();
     const form = event.target;
     const f = new FormData();
-    f.append("title", form.elements.title.value);
+    f.append("data_type", form.elements["Data Type"].value);
+    f.append("data_version", form.elements["Data Version"].value);
+    f.append("metadata", form.elements["MetaData"].value);
+    for (let dev in form.elements["Dev"]) {
+        if (form.elements["Dev"][dev].value) {
+            f.append("affects.developer", form.elements["Dev"][dev].value);
+        }
+    }
+    for (let deployer in form.elements["Deployer"]) {
+        if (form.elements["Deployer"][deployer]) {
+            f.append(
+                "affects.deployer",
+                form.elements["Deployer"][deployer].value
+            );
+        }
+    }
+    for (let art in form.elements["Art Types"]) {
+        f.append("artifacts.type", form.elements["Art Types"][art].value);
+    }
+    f.append("problemtype.classof", form.elements["ClassOf"].value);
+    f.append("problemtype.type", form.elements["Type"].value);
+    f.append("problemtype.description.lang", form.elements["lang"].value);
+    f.append("problemtype.description.value", form.elements["value"].value);
+    for (let metrics in form.elements["Metric"]) {
+        f.append("metrics", form.elements["Metric"][metrics].value);
+    }
+    for (let metrics in form.elements["Metric Type"]) {
+        f.append("metrics.type", form.elements["Metric Type"][metrics].value);
+    }
+    for (let metrics in form.elements["Metric Value"]) {
+        f.append(
+            "metrics.value",
+            form.elements["harm_category"][metrics].value
+        );
+    }
 
     const res = await fetch("http://localhost:3000/api/convert-form-to-json", {
         method: "POST",
@@ -56,8 +90,8 @@ function Editor(props) {
                         <Label htmlFor="Title">Title :</Label>
                         <Textarea
                             type="text"
-                            name="title"
-                            id="title"
+                            name="Title"
+                            id="Title"
                             defaultValue={actualData.description.value}
                         />
 
