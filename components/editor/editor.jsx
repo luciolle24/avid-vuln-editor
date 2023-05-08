@@ -7,12 +7,11 @@ import {
 } from "../cards/cards.jsx";
 import { notification } from "antd";
 
-async function submitForm(data) {
-    data.preventDefault();
-    console.log(data);
+async function submitForm(event) {
+    event.preventDefault();
+    const form = event.target;
     const f = new FormData();
-    f.append("title", data.title);
-    console.log(data.title);
+    f.append("title", form.elements.title.value);
 
     const res = await fetch("http://localhost:3000/api/convert-form-to-json", {
         method: "POST",
