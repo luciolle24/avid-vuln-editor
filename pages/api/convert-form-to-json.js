@@ -1,16 +1,19 @@
 import formidable from "formidable";
 import { v4 as uuidv4 } from "uuid";
+import path from "path";
+import fs from "fs";
 
 async function saveFormData(fields, files) {
     const jsonData = JSON.stringify(fields, null, 2);
     const uuid = uuidv4();
-    const filePath = path.join("../../vulns/", { uuid }, ".json");
+
     try {
         await fs.promises.writeFile(filePath, jsonData);
         console.log("JSON file created successfully");
     } catch (error) {
         console.error(error);
     }
+    const filePath = path.join("./vulns/", "${uuid}.json");
 }
 
 async function handlePostFormReq(req, res) {
@@ -64,3 +67,5 @@ export default async function handler(req, res) {
         res.status(404).send("method not found");
     }
 }
+
+export const config = { api: { bodyParser: false } };

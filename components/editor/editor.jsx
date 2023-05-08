@@ -9,8 +9,6 @@ import {
 async function submitForm(data) {
     const f = new FormData();
     f.append("title", data.title);
-    var newfile = f.get("title");
-    console.log(newfile.name); //filename
 
     const res = await fetch("/api/convert-form-to-json", {
         method: "POST",
